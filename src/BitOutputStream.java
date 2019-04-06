@@ -7,7 +7,7 @@ import java.io.IOException;
  *
  * @author Ryan Strauss
  */
-public class BitOutputStream {
+class BitOutputStream {
 
     private final int BYTE_SIZE = 8;
 
@@ -20,25 +20,17 @@ public class BitOutputStream {
      *
      * @param file system path to the file to be written
      */
-    BitOutputStream(String file) {
+    BitOutputStream(String file) throws FileNotFoundException {
         this.bufferSize = 0;
         this.buffer = 0;
-        try {
-            this.outputStream = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e.toString());
-        }
+        this.outputStream = new FileOutputStream(file);
     }
 
     /**
      * Writes the next byte of data in the stream's internal buffer to the file.
      */
-    private void flushBuffer() {
-        try {
-            this.outputStream.write(this.buffer);
-        } catch (IOException e) {
-            throw new RuntimeException(e.toString());
-        }
+    private void flushBuffer() throws IOException {
+        this.outputStream.write(this.buffer);
         this.buffer = 0;
         this.bufferSize = 0;
     }
@@ -48,7 +40,7 @@ public class BitOutputStream {
      *
      * @param bit the bit to be written to the file
      */
-    public void writeBit(int bit) {
+    public void writeBit(int bit) throws IOException {
         if (bit < 0 || bit > 1)
             throw new IllegalArgumentException("Bit can only be 0 or 1.");
 
@@ -61,14 +53,10 @@ public class BitOutputStream {
     /**
      * Closes the BitOutputStream.
      */
-    public void close() {
+    public void close() throws IOException {
         if (this.bufferSize > 0)
             flushBuffer();
-        try {
-            this.outputStream.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e.toString());
-        }
+        this.outputStream.close();
     }
 
 }

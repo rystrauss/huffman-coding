@@ -1,5 +1,4 @@
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -7,10 +6,10 @@ import java.io.IOException;
  *
  * @author Ryan Strauss
  */
-public class BitInputStream {
+class BitInputStream {
 
-    private final int BYTE_SIZE = 8;
-    private final int EOF = -1;
+    private static final int BYTE_SIZE = 8;
+    private static final int EOF = -1;
 
     private FileInputStream inputStream;
     private int buffer;
@@ -21,29 +20,20 @@ public class BitInputStream {
      *
      * @param file system path to the file to be read
      */
-    BitInputStream(String file) {
+    BitInputStream(String file) throws IOException {
         this.bufferSize = 0;
-        try {
-            this.inputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e.toString());
-        }
+        this.inputStream = new FileInputStream(file);
         fillBuffer();
     }
 
     /**
      * Refills the stream's internal buffer with the next byte of data.
      */
-    private void fillBuffer() {
+    private void fillBuffer() throws IOException {
         if (this.bufferSize != 0)
             throw new RuntimeException("Trying to fill non-empty buffer.");
 
-        try {
-            this.buffer = this.inputStream.read();
-        } catch (IOException e) {
-            throw new RuntimeException(e.toString());
-        }
-
+        this.buffer = this.inputStream.read();
         this.bufferSize = BYTE_SIZE;
     }
 
@@ -52,7 +42,7 @@ public class BitInputStream {
      *
      * @return the next bit that is read from the file
      */
-    public int nextBit() {
+    public int nextBit() throws IOException {
         if (this.buffer == EOF)
             return EOF;
 
@@ -67,12 +57,8 @@ public class BitInputStream {
     /**
      * Closes the BitInputStream.
      */
-    public void close() {
-        try {
-            this.inputStream.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e.toString());
-        }
+    public void close() throws IOException {
+        this.inputStream.close();
     }
 
 }
