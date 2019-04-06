@@ -10,7 +10,7 @@ import static java.lang.System.exit;
  */
 public class Encode {
 
-    private static final int MAX_CHAR = 256;
+    private static final int MAX_BYTE = 256;
     private static final int EOF = -1;
 
     private static String inputFile;
@@ -28,13 +28,13 @@ public class Encode {
     }
 
     /**
-     * Counts the frequency of each ASCII character in the input file.
+     * Counts the frequency of each byte in the input file.
      *
-     * @return an int array containing the frequencies of the ASCII characters
+     * @return an int array containing the frequencies of the bytes
      * @throws IOException if the input file cannot be opened
      */
     private static int[] countCharacterFrequencies() throws IOException {
-        int[] frequencies = new int[MAX_CHAR];
+        int[] frequencies = new int[MAX_BYTE];
         FileInputStream inputStream = new FileInputStream(inputFile);
         int c = inputStream.read();
         while (c != EOF) {
@@ -46,14 +46,14 @@ public class Encode {
     }
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
+        if (args.length != 1) {
             System.out.println("Error: an argument must be provided.\n");
             System.out.println("Usage: java Encode <input>\n");
             System.out.println("    <input>  = system path to the file that will be compressed");
             exit(1);
         }
 
-        setFileNames(args[1]);
+        setFileNames(args[0]);
         int[] frequencies = countCharacterFrequencies();
         HuffmanTree tree = new HuffmanTree(frequencies);
 
