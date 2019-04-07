@@ -9,7 +9,7 @@ import java.io.IOException;
  */
 class BitOutputStream {
 
-    private final int BYTE_SIZE = 8;
+    private static final int BYTE_SIZE = 8;
 
     private FileOutputStream outputStream;
     private int buffer;
@@ -19,6 +19,7 @@ class BitOutputStream {
      * Constructs a BitOutputStream that allows the specified file to be written bit by bit.
      *
      * @param file system path to the file to be written
+     * @throws FileNotFoundException if the file cannot be opened
      */
     BitOutputStream(String file) throws FileNotFoundException {
         this.bufferSize = 0;
@@ -28,6 +29,8 @@ class BitOutputStream {
 
     /**
      * Writes the next byte of data in the stream's internal buffer to the file.
+     *
+     * @throws IOException if the buffer cannot be flushed to the file
      */
     private void flushBuffer() throws IOException {
         this.outputStream.write(this.buffer);
@@ -36,9 +39,10 @@ class BitOutputStream {
     }
 
     /**
-     * Writes the next bit to the file.
+     * Writes a bit to the file.
      *
      * @param bit the bit to be written to the file
+     * @throws IOException if the bit cannot be written to the file
      */
     public void writeBit(int bit) throws IOException {
         if (bit < 0 || bit > 1)
@@ -51,7 +55,23 @@ class BitOutputStream {
     }
 
     /**
+     * Writes multiple bits of data to the stream.
+     *
+     * @param data the data to be written to the file
+     * @param bits the number of bits of data to be written
+     * @throws IOException if the byte cannot be written to the file
+     */
+    public void writeBits(int data, int bits) throws IOException {
+        for (int i = 0; i < bits; i++) {
+            writeBit(data % 2);
+            data /= 2;
+        }
+    }
+
+    /**
      * Closes the BitOutputStream.
+     *
+     * @throws IOException if the file cannot be closed
      */
     public void close() throws IOException {
         if (this.bufferSize > 0)

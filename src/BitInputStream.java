@@ -19,6 +19,7 @@ class BitInputStream {
      * Constructs a BitInputStream that allows the specified file to be read bit by bit.
      *
      * @param file system path to the file to be read
+     * @throws IOException if the file cannot be opened
      */
     BitInputStream(String file) throws IOException {
         this.bufferSize = 0;
@@ -28,6 +29,8 @@ class BitInputStream {
 
     /**
      * Refills the stream's internal buffer with the next byte of data.
+     *
+     * @throws IOException if the next byte cannot be read from the file
      */
     private void fillBuffer() throws IOException {
         if (this.bufferSize != 0)
@@ -41,6 +44,7 @@ class BitInputStream {
      * Gets the next bit from the file.
      *
      * @return the next bit that is read from the file
+     * @throws IOException if the next bit cannot be read from the file
      */
     public int nextBit() throws IOException {
         if (this.buffer == EOF)
@@ -56,6 +60,8 @@ class BitInputStream {
 
     /**
      * Closes the BitInputStream.
+     *
+     * @throws IOException if the input stream cannot be closed
      */
     public void close() throws IOException {
         this.inputStream.close();
