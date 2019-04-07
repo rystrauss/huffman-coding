@@ -8,6 +8,7 @@ import java.io.IOException;
  */
 class BitInputStream {
 
+    private static final int INT_SIZE = 16;
     private static final int BYTE_SIZE = 8;
     private static final int EOF = -1;
 
@@ -56,6 +57,23 @@ class BitInputStream {
             fillBuffer();
 
         return bit;
+    }
+
+    /**
+     * Gets the specified number of bits worth of data from the stream.
+     *
+     * @param bits the number of bits to read in
+     * @return the data read from the stream
+     * @throws IOException if the data cannot be read from the stream
+     */
+    public int nextBits(int bits) throws IOException {
+        if (bits > INT_SIZE)
+            throw new IllegalArgumentException("Cannot read more than 4 bytes (one int) at a time.");
+
+        int data = 0;
+        for (int i = 0; i < bits; i++)
+            data += nextBit() << (bits - i - 1);
+        return data;
     }
 
     /**
