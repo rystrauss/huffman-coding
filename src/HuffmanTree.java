@@ -52,8 +52,8 @@ class HuffmanTree {
      * @throws IOException if the input stream cannot be read from
      */
     HuffmanTree(BitInputStream inputStream) throws IOException {
-        this.codes = null;
         this.root = readNode(inputStream);
+        this.codes = buildCodes();
     }
 
     /**
@@ -76,8 +76,16 @@ class HuffmanTree {
      * @param outputStream output stream to write decompressed data to
      * @param eof          character that signifies the end of the file
      */
-    void decode(BitInputStream inputStream, PrintStream outputStream, int eof) {
-
+    void decode(BitInputStream inputStream, PrintStream outputStream, int eof) throws IOException {
+        Node cur = this.root;
+        while (cur.data != eof) {
+            int bit = inputStream.nextBit();
+            cur = (bit == 0) ? cur.left : cur.right;
+            if (cur.isLeaf && cur.data != eof) {
+                outputStream.write(cur.data);
+                cur = this.root;
+            }
+        }
     }
 
     /**
@@ -135,8 +143,8 @@ class HuffmanTree {
         if (cur.isLeaf) {
             codes[cur.data] = code;
         } else {
-            buildCodes(codes, cur.left, code + '0');
-            buildCodes(codes, cur.right, code + '1');
+            buildCodes(codes, cur.left, code + "0");
+            buildCodes(codes, cur.right, code + "1");
         }
     }
 
@@ -151,6 +159,7 @@ class HuffmanTree {
         if (inputStream.nextBit() == 1)
             return new Node(inputStream.nextBits(9), 0);
 
+        inputStream.nextBits(9);
         return new Node(readNode(inputStream), readNode(inputStream));
     }
 

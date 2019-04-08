@@ -21,8 +21,7 @@ public class Encode {
      */
     private static void setFileNames(String file) {
         inputFile = file;
-        int extensionIndex = inputFile.lastIndexOf('.');
-        outputFile = inputFile.substring(0, extensionIndex) + ".huff";
+        outputFile = inputFile + ".huff";
     }
 
     /**

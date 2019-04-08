@@ -44,7 +44,7 @@ class BitOutputStream {
      * @param bit the bit to be written to the file
      * @throws IOException if the bit cannot be written to the file
      */
-    public void writeBit(int bit) throws IOException {
+    void writeBit(int bit) throws IOException {
         if (bit < 0 || bit > 1)
             throw new IllegalArgumentException("Bit can only be 0 or 1.");
 
@@ -61,11 +61,9 @@ class BitOutputStream {
      * @param bits the number of bits of data to be written
      * @throws IOException if the byte cannot be written to the file
      */
-    public void writeBits(int data, int bits) throws IOException {
-        for (int i = 0; i < bits; i++) {
-            writeBit(data % 2);
-            data /= 2;
-        }
+    void writeBits(int data, int bits) throws IOException {
+        for (int i = 0; i < bits; i++)
+            writeBit((data >> bits - i - 1) % 2);
     }
 
     /**
@@ -73,7 +71,7 @@ class BitOutputStream {
      *
      * @throws IOException if the file cannot be closed
      */
-    public void close() throws IOException {
+    void close() throws IOException {
         if (this.bufferSize > 0)
             flushBuffer();
         this.outputStream.close();

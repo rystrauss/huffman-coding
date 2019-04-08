@@ -47,7 +47,7 @@ class BitInputStream {
      * @return the next bit that is read from the file
      * @throws IOException if the next bit cannot be read from the file
      */
-    public int nextBit() throws IOException {
+    int nextBit() throws IOException {
         if (this.buffer == EOF)
             return EOF;
 
@@ -66,7 +66,7 @@ class BitInputStream {
      * @return the data read from the stream
      * @throws IOException if the data cannot be read from the stream
      */
-    public int nextBits(int bits) throws IOException {
+    int nextBits(int bits) throws IOException {
         if (bits > INT_SIZE)
             throw new IllegalArgumentException("Cannot read more than 4 bytes (one int) at a time.");
 
@@ -81,7 +81,7 @@ class BitInputStream {
      *
      * @throws IOException if the input stream cannot be closed
      */
-    public void close() throws IOException {
+    void close() throws IOException {
         this.inputStream.close();
     }
 
