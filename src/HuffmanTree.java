@@ -115,8 +115,12 @@ class HuffmanTree {
         if (cur == null)
             return;
 
-        outputStream.writeBit(cur.isLeaf ? 1 : 0);
-        outputStream.writeBits(cur.data, 9);
+        if (cur.isLeaf) {
+            outputStream.writeBit(1);
+            outputStream.writeBits(cur.data, 9);
+        } else {
+            outputStream.writeBit(0);
+        }
         write(outputStream, cur.left);
         write(outputStream, cur.right);
     }
@@ -159,7 +163,6 @@ class HuffmanTree {
         if (inputStream.nextBit() == 1)
             return new Node(inputStream.nextBits(9), 0);
 
-        inputStream.nextBits(9);
         return new Node(readNode(inputStream), readNode(inputStream));
     }
 
